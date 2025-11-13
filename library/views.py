@@ -190,3 +190,38 @@ class TableReservationAPIView(viewsets.ModelViewSet):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response(str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            
+
+class UrlShortner(viewsets.ModelViewSet):
+    queryset = library_models.UrlArchive.objects.all()
+    serializer_class = library_serializer.UrlShortnerSerializer
+    permission_classes = [AllowAny]
+
+    def create(self, request, *args, **kwargs):
+            """
+            create table data
+            """
+            try:
+                serializer = self.serializer_class(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response(str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            
+            
+    def list(self, request, *args, **kwargs):
+            """
+            get all table list
+            """
+            try:
+                shortend_params = self.request.query_params.get("shortened_url", None)
+                url_objs = self.get_queryset()
+                if shortend_params:
+                     url_objs = url_objs.filter(shortened_url=shortend_params)
+                serializer = library_serializer.GetUrlShortnerSerializer(url_objs, many=True)
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response(str(e), status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            
+            

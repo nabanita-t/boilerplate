@@ -91,3 +91,9 @@ class TableReservation(BaseModel):
 # Fields: full_name, phone_number
 
 
+class UrlArchive(BaseModel):
+    original_url = models.CharField(max_length=255, unique=True)
+    shortened_url = models.CharField(max_length=8, unique=True)
+    
+    def __str__(self):
+        return f"{self.original_url} - {self.shortened_url} "

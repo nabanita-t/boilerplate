@@ -3,6 +3,7 @@ from library import models as library_models
 from datetime import timedelta
 from django.db.models import Q
 from django.core.exceptions import ValidationError
+import pyshorteners
 
 # class BookSerializer(serializers.ModelSerializer):
 #     class Meta:
@@ -43,3 +44,25 @@ class TableReservationSerializer(serializers.ModelSerializer):
         customer = library_models.Customer.objects.create(**customer_details)
         validated_data['customer_id'] = customer.id
         return super().create(validated_data)()
+
+
+class UrlShortnerSerializer(serializers.ModelSerializer):
+    original_url = serializers.CharField(required=True)
+
+    class Meta:
+        model = library_models.UrlArchive
+        fields = ['original_url',]
+        
+    def create(self, validated_data):
+        s = pyshorteners.Shortener(timeout=5)
+        short_url = s.tinyurl.short(validated_data['original_url'])
+        validated_data['shortened_url'] = short_url[-8:]
+        url_obj = library_models.UrlArchive.objects.create(**validated_data)
+        return url_obj
+    
+class GetUrlShortnerSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = library_models.UrlArchive
+        fields = ['id', 'original_url', 'shortened_url']
+    

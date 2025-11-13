@@ -10,7 +10,8 @@ router = DefaultRouter()
 # router.register(r'books', BookViewSet, basename='book')
 router.register(r'table', library_views.TableAPIView, basename='table')
 router.register(r'table-reservation', library_views.TableReservationAPIView, basename='table-reservation')
-
+router.register(r'url-short', library_views.UrlShortner, basename='url-short')
+# router.register(r'url-shorter/<str:shortened_url>', library_views.UrlShortnerDetails, basename='url-short-details')
 # router.register('profile', BookViewSet, basename='books-CRUD'),
 
 urlpatterns = [

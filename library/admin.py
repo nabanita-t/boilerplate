@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Table, TableReservation, Customer
+from .models import Book, Table, TableReservation, Customer, UrlArchive
 
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
@@ -17,3 +17,7 @@ class BookAdmin(admin.ModelAdmin):
 @admin.register(Customer)
 class BookAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'phone_number')
+
+@admin.register(UrlArchive)
+class UrlArchiveAdmin(admin.ModelAdmin):
+    list_display = ('original_url', 'shortened_url')
